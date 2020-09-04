@@ -10,6 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -47,7 +48,7 @@ public class SessionProfileService {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static String buildProfilesJson(String sessionDataJson) {
         HashSet<String> visitorIds = new HashSet<>();
-        HashMap<String, VisitObject> visits = new HashMap<String, VisitObject>();
+        HashMap<String, ArrayList<VisitObject>> visitsMap = new HashMap<>();
         try {
             JSONArray events = buildJsonArrayFromString(sessionDataJson);
 
@@ -59,7 +60,26 @@ public class SessionProfileService {
             }
 
             for(String id: visitorIds) {
-                
+                ArrayList<VisitObject> tempVisitArray = new ArrayList<>();
+
+                for(Object event : events) {
+                    tempObj = (JSONObject) event;
+
+                    if(tempObj.get("visitorId").equals(id)) {
+                        tempVisitArray.add(new VisitObject(
+                                tempObj.get("url").toString(),
+                                tempObj.get("timestamp").toString()
+                                )
+                        );
+                    }
+                }
+                visitsMap.put(id, tempVisitArray);
+            }
+
+            for(String id: visitorIds) {
+                for(ArrayList<VisitObject> currArray: visitsMap.values()){
+                    System.out.println(id + ": " + currArray.toString());
+                }
             }
 
         } catch (Exception e) {
