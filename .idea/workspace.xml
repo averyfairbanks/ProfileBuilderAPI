@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f1958866-b481-4e96-b10c-b09630dee2ec" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KotlinMultiplatform">
+    <executables />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.2.2\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1gxh6Xxd7O6RpFfwtGbHZ49dCkt" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RunManager">
+    <configuration name="ProjectRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ProjectRunner" />
+      <module name="HubSpotProjectPrompt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ProjectRunner" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f1958866-b481-4e96-b10c-b09630dee2ec" name="Default Changelist" comment="" />
+      <created>1599061978402</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599061978402</updated>
+      <workItem from="1599061979605" duration="812000" />
+      <workItem from="1599063670813" duration="7205000" />
+      <workItem from="1599240183243" duration="401000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial IntelliJ commit">
+      <created>1599240326941</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1599240326941</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+    </ignored-roots>
+    <MESSAGE value="Initial IntelliJ commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial IntelliJ commit" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="440" y="99" key="#Project_Structure" timestamp="1599063582534">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="440" y="99" key="#Project_Structure/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599063582534" />
+    <state x="113" y="-1025" key="#com.intellij.ide.util.MemberChooser" timestamp="1599066132443">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state x="113" y="-1025" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599066132443" />
+    <state x="520" y="99" key="CommitChangelistDialog2" timestamp="1599240326083">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="520" y="99" key="CommitChangelistDialog2/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240326083" />
+    <state x="740" y="280" key="FileChooserDialogImpl" timestamp="1599063610312">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="740" y="280" key="FileChooserDialogImpl/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599063610312" />
+    <state width="1471" height="403" key="GridCell.Tab.0.bottom" timestamp="1599071438061">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state width="1471" height="403" key="GridCell.Tab.0.bottom/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599071438061" />
+    <state width="1471" height="403" key="GridCell.Tab.0.center" timestamp="1599071438061">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state width="1471" height="403" key="GridCell.Tab.0.center/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599071438061" />
+    <state width="1471" height="403" key="GridCell.Tab.0.left" timestamp="1599071438060">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state width="1471" height="403" key="GridCell.Tab.0.left/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599071438060" />
+    <state width="1471" height="403" key="GridCell.Tab.0.right" timestamp="1599071438061">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state width="1471" height="403" key="GridCell.Tab.0.right/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599071438061" />
+    <state x="-162" y="-1077" key="Maven.ArtifactSearchDialog" timestamp="1599068927222">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state x="-162" y="-1077" key="Maven.ArtifactSearchDialog/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599068927222" />
+    <state x="461" y="170" key="SettingsEditor" timestamp="1599063732118">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="461" y="170" key="SettingsEditor/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599063732118" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1599240355713">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240355713" />
+    <state x="-226" y="-1340" width="1068" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1599067295043">
+      <screen x="-319" y="-1440" width="2560" height="1410" />
+    </state>
+    <state x="-226" y="-1340" width="1068" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599067295043" />
+  </component>
+</project>
