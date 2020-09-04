@@ -10,9 +10,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * This program is intended to gather json data from url, build a profile for each unique user, and then post it to
@@ -22,8 +20,8 @@ public class SessionProfileService {
 
     public static void buildAndPostProfilesFromUrl(String url) {
         try {
-            String sessionDataJson = getJsonAsString(url);
-            String profileDataJson = buildProfilesJson(sessionDataJson);
+            String eventDataJson = getJsonAsString(url);
+            String profileDataJson = buildProfilesJson(eventDataJson);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,42 +43,22 @@ public class SessionProfileService {
         return jsonString;
     }
 
+    /**
+     * Calls many subsequent methods but is tasked with building "sessionByUser" json
+     * @param eventDataJson
+     * @return
+     */
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private static String buildProfilesJson(String sessionDataJson) {
-        HashSet<String> visitorIds = new HashSet<>();
-        HashMap<String, ArrayList<VisitObject>> visitsMap = new HashMap<>();
+    private static String buildProfilesJson(String eventDataJson) {
+        HashSet<String> visitorIdsSet;
+        HashMap<String, ArrayList<VisitObject>> visitsMap;
+
         try {
-            JSONArray events = buildJsonArrayFromString(sessionDataJson);
+            JSONArray events = buildJsonArrayFromString(eventDataJson);
+            visitorIdsSet = buildVisitorIdSet(events);
+            visitsMap = buildVisitorIdMap(visitorIdsSet, events);
 
-            //HELL CODE STARTS HERE, object is to build profiles based on specifications
-            JSONObject tempObj;
-            for (Object event : events) {
-                tempObj = (JSONObject) event;
-                visitorIds.add(tempObj.get("visitorId").toString());
-            }
-
-            for(String id: visitorIds) {
-                ArrayList<VisitObject> tempVisitArray = new ArrayList<>();
-
-                for(Object event : events) {
-                    tempObj = (JSONObject) event;
-
-                    if(tempObj.get("visitorId").equals(id)) {
-                        tempVisitArray.add(new VisitObject(
-                                tempObj.get("url").toString(),
-                                tempObj.get("timestamp").toString()
-                                )
-                        );
-                    }
-                }
-                visitsMap.put(id, tempVisitArray);
-            }
-
-            for(String id: visitorIds) {
-                for(ArrayList<VisitObject> currArray: visitsMap.values()){
-                    System.out.println(id + ": " + currArray.toString());
-                }
-            }
+            sortVisitObjectArrays(visitsMap);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,8 +66,54 @@ public class SessionProfileService {
         return "";
     }
 
-    private static JSONArray buildJsonArrayFromString(String sessionDataJson) throws ParseException {
+    /**
+     *
+     * @param eventDataJson
+     * @return
+     * @throws ParseException
+     */
+    private static JSONArray buildJsonArrayFromString(String eventDataJson) throws ParseException {
         JSONParser parser = new JSONParser();
-        return (JSONArray) ((JSONObject) parser.parse(sessionDataJson)).get("events");
+        return (JSONArray) ((JSONObject) parser.parse(eventDataJson)).get("events");
+    }
+
+    private static HashSet<String> buildVisitorIdSet(JSONArray events) {
+        HashSet<String> idSet = new HashSet<>();
+
+        JSONObject tempObj;
+        for (Object event : events) {
+            tempObj = (JSONObject) event;
+            idSet.add(tempObj.get("visitorId").toString());
+        }
+        return idSet;
+    }
+
+    private static HashMap<String, ArrayList<VisitObject>> buildVisitorIdMap(HashSet<String> visitorIds, JSONArray events) {
+        HashMap<String, ArrayList<VisitObject>> visitsMap = new HashMap<>();
+        JSONObject tempObj;
+        for(String id: visitorIds) {
+            ArrayList<VisitObject> tempVisitArray = new ArrayList<>();
+
+            for(Object event : events) {
+                tempObj = (JSONObject) event;
+
+                if(tempObj.get("visitorId").equals(id)) {
+                    tempVisitArray.add(new VisitObject(
+                                    tempObj.get("url").toString(),
+                                    tempObj.get("timestamp").toString()
+                            )
+                    );
+                }
+            }
+            visitsMap.put(id, tempVisitArray);
+        }
+        return visitsMap;
+    }
+
+    private static void sortVisitObjectArrays(HashMap<String, ArrayList<VisitObject>> visitsMap) {
+        for(ArrayList<VisitObject> currArray: visitsMap.values()){
+            currArray.sort(Comparator.comparing(VisitObject::getTimestamp));
+            System.out.println(currArray.toString());
+        }
     }
 }
