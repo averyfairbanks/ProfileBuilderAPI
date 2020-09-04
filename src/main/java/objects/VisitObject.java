@@ -24,4 +24,8 @@ public class VisitObject {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+    public String toString() {
+        return urlVisited + ": " + timestamp;
+    }
 }
