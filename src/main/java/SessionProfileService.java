@@ -1,3 +1,4 @@
+import objects.VisitObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -9,9 +10,13 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.HashSet;
 
-
+/**
+ * This program is intended to gather json data from url, build a profile for each unique user, and then post it to
+ * another url
+ */
 public class SessionProfileService {
 
     public static void buildAndPostProfilesFromUrl(String url) {
@@ -42,6 +47,7 @@ public class SessionProfileService {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static String buildProfilesJson(String sessionDataJson) {
         HashSet<String> visitorIds = new HashSet<>();
+        HashMap<String, VisitObject> visits = new HashMap<String, VisitObject>();
         try {
             JSONArray events = buildJsonArrayFromString(sessionDataJson);
 
@@ -51,7 +57,10 @@ public class SessionProfileService {
                 tempObj = (JSONObject) event;
                 visitorIds.add(tempObj.get("visitorId").toString());
             }
-            //System.out.println(visitorIds.toString());
+
+            for(String id: visitorIds) {
+                
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
