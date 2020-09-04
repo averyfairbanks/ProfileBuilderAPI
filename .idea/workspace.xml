@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f1958866-b481-4e96-b10c-b09630dee2ec" name="Default Changelist" comment="" />
+    <list default="true" id="f1958866-b481-4e96-b10c-b09630dee2ec" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/objects/VisitObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/SessionProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SessionProfileService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +28,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="KotlinMultiplatform">
@@ -66,6 +75,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.ProjectRunner" />
@@ -82,7 +102,7 @@
       <updated>1599061978402</updated>
       <workItem from="1599061979605" duration="812000" />
       <workItem from="1599063670813" duration="7205000" />
-      <workItem from="1599240183243" duration="401000" />
+      <workItem from="1599240183243" duration="1863000" />
     </task>
     <task id="LOCAL-00001" summary="Initial IntelliJ commit">
       <created>1599240326941</created>
@@ -91,7 +111,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599240326941</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Initial IntelliJ commit/remove commented code">
+      <created>1599240877677</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1599240877677</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -102,21 +129,23 @@
       <path value="$PROJECT_DIR$/.." />
     </ignored-roots>
     <MESSAGE value="Initial IntelliJ commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial IntelliJ commit" />
+    <MESSAGE value="Initial IntelliJ commit/remove commented code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial IntelliJ commit/remove commented code" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="440" y="99" key="#Project_Structure" timestamp="1599063582534">
+    <state x="440" y="99" key="#Project_Structure" timestamp="1599240811326">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="440" y="99" key="#Project_Structure/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599063582534" />
-    <state x="113" y="-1025" key="#com.intellij.ide.util.MemberChooser" timestamp="1599066132443">
-      <screen x="-319" y="-1440" width="2560" height="1410" />
+    <state x="440" y="99" key="#Project_Structure/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240811326" />
+    <state x="324" y="309" key="#com.intellij.ide.util.MemberChooser" timestamp="1599241990265">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="113" y="-1025" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599066132443" />
-    <state x="520" y="99" key="CommitChangelistDialog2" timestamp="1599240326083">
+    <state x="324" y="309" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599241990265" />
+    <state x="520" y="99" key="CommitChangelistDialog2" timestamp="1599240876903">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="520" y="99" key="CommitChangelistDialog2/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240326083" />
+    <state x="520" y="99" key="CommitChangelistDialog2/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240876903" />
     <state x="740" y="280" key="FileChooserDialogImpl" timestamp="1599063610312">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -145,13 +174,17 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="461" y="170" key="SettingsEditor/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599063732118" />
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1599240355713">
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2" timestamp="1599240879273">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240355713" />
+    <state x="552" y="258" key="Vcs.Push.Dialog.v2/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599240879273" />
     <state x="-226" y="-1340" width="1068" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1599067295043">
       <screen x="-319" y="-1440" width="2560" height="1410" />
     </state>
     <state x="-226" y="-1340" width="1068" height="1217" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1050/-319.-1440.2560.1410@-319.-1440.2560.1410" timestamp="1599067295043" />
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1599241984621">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050/-319.-1440.2560.1410@0.0.1920.1050" timestamp="1599241984621" />
   </component>
 </project>
