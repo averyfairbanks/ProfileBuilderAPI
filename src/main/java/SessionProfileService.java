@@ -51,7 +51,6 @@ public class SessionProfileService {
                 tempObj = (JSONObject) event;
                 visitorIds.add(tempObj.get("visitorId").toString());
             }
-            //System.out.println(visitorIds.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
