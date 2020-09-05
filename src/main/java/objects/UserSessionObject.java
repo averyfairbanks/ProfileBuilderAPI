@@ -36,4 +36,10 @@ public class UserSessionObject {
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
+
+    public void setAll(String duration, ArrayList<String> pages, String startTime) {
+        this.duration = duration;
+        this.pages = pages;
+        this.startTime = startTime;
+    }
 }

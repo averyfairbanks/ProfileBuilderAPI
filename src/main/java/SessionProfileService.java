@@ -1,3 +1,4 @@
+import objects.UserSessionObject;
 import objects.VisitObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -17,6 +18,7 @@ import java.util.*;
  * another url
  */
 public class SessionProfileService {
+    private static final int TEN_MIN_IN_MILLISECONDS = 60000;
 
     public static void buildAndPostProfilesFromUrl(String url) {
         try {
@@ -60,6 +62,36 @@ public class SessionProfileService {
 
             sortVisitObjectArrays(visitsMap);
 
+            JSONArray sessionArray = new JSONArray();
+            JSONObject currSessionById = new JSONObject(), sessionsByUser = new JSONObject();
+            for(Map.Entry<String, ArrayList<VisitObject>> entry: visitsMap.entrySet()) {
+                ArrayList<String> pagesVisited = new ArrayList<>();
+                UserSessionObject currSessionObject = new UserSessionObject("0", null, null);
+                sessionArray.clear();
+
+                for (VisitObject currVisit : entry.getValue()) {
+                    if(currSessionObject.getStartTime() == null) {
+                        currSessionObject.setStartTime(currVisit.getTimestamp());
+                    }
+
+                    if(Long.parseLong(currVisit.getTimestamp()) - Long.parseLong(currSessionObject.getStartTime()) > TEN_MIN_IN_MILLISECONDS) {
+                        currSessionObject.setPages(pagesVisited);
+                        JSONObject temp = new JSONObject();
+                        temp.put("duration", currSessionObject.getDuration());
+                        temp.put("pages", currSessionObject.getPages().toString());
+                        temp.put("startTime", currSessionObject.getStartTime());
+                        sessionArray.add(temp);
+                        currSessionObject.setAll("0", null, null);
+                        pagesVisited.clear();
+                    }
+                    else {
+                        pagesVisited.add(currVisit.getUrlVisited());
+                        currSessionObject.setDuration( Long.toString( Long.parseLong(currVisit.getTimestamp() ) - Long.parseLong(currSessionObject.getStartTime() ) ) );
+                    }
+                }
+                currSessionById.put(entry.getKey(), sessionArray);
+            }
+            sessionsByUser.put("sessionsByUser", currSessionById);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,7 +145,6 @@ public class SessionProfileService {
     private static void sortVisitObjectArrays(HashMap<String, ArrayList<VisitObject>> visitsMap) {
         for(ArrayList<VisitObject> currArray: visitsMap.values()){
             currArray.sort(Comparator.comparing(VisitObject::getTimestamp));
-            System.out.println(currArray.toString());
         }
     }
 }
