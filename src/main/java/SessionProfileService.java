@@ -1,3 +1,4 @@
+import objects.UserSessionObject;
 import objects.VisitObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -10,20 +11,19 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * This program is intended to gather json data from url, build a profile for each unique user, and then post it to
  * another url
  */
 public class SessionProfileService {
+    private static final int TEN_MIN_IN_MILLISECONDS = 60000;
 
     public static void buildAndPostProfilesFromUrl(String url) {
         try {
-            String sessionDataJson = getJsonAsString(url);
-            String profileDataJson = buildProfilesJson(sessionDataJson);
+            String eventDataJson = getJsonAsString(url);
+            String profileDataJson = buildProfilesJson(eventDataJson);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,51 +45,106 @@ public class SessionProfileService {
         return jsonString;
     }
 
+    /**
+     * Calls many subsequent methods but is tasked with building "sessionByUser" json
+     * @param eventDataJson
+     * @return
+     */
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private static String buildProfilesJson(String sessionDataJson) {
-        HashSet<String> visitorIds = new HashSet<>();
-        HashMap<String, ArrayList<VisitObject>> visitsMap = new HashMap<>();
+    private static String buildProfilesJson(String eventDataJson) {
+        HashSet<String> visitorIdsSet;
+        HashMap<String, ArrayList<VisitObject>> visitsMap;
+
         try {
-            JSONArray events = buildJsonArrayFromString(sessionDataJson);
+            JSONArray events = buildJsonArrayFromString(eventDataJson);
+            visitorIdsSet = buildVisitorIdSet(events);
+            visitsMap = buildVisitorIdMap(visitorIdsSet, events);
 
-            //HELL CODE STARTS HERE, object is to build profiles based on specifications
-            JSONObject tempObj;
-            for (Object event : events) {
-                tempObj = (JSONObject) event;
-                visitorIds.add(tempObj.get("visitorId").toString());
-            }
+            sortVisitObjectArrays(visitsMap);
 
-            for(String id: visitorIds) {
-                ArrayList<VisitObject> tempVisitArray = new ArrayList<>();
+            JSONArray sessionArray = new JSONArray();
+            JSONObject currSessionById = new JSONObject(), sessionsByUser = new JSONObject();
+            for(Map.Entry<String, ArrayList<VisitObject>> entry: visitsMap.entrySet()) {
+                ArrayList<String> pagesVisited = new ArrayList<>();
+                UserSessionObject currSessionObject = new UserSessionObject("0", null, null);
+                sessionArray.clear();
 
-                for(Object event : events) {
-                    tempObj = (JSONObject) event;
+                for (VisitObject currVisit : entry.getValue()) {
+                    if(currSessionObject.getStartTime() == null) {
+                        currSessionObject.setStartTime(currVisit.getTimestamp());
+                    }
 
-                    if(tempObj.get("visitorId").equals(id)) {
-                        tempVisitArray.add(new VisitObject(
-                                tempObj.get("url").toString(),
-                                tempObj.get("timestamp").toString()
-                                )
-                        );
+                    if(Long.parseLong(currVisit.getTimestamp()) - Long.parseLong(currSessionObject.getStartTime()) > TEN_MIN_IN_MILLISECONDS) {
+                        currSessionObject.setPages(pagesVisited);
+                        JSONObject temp = new JSONObject();
+                        temp.put("duration", currSessionObject.getDuration());
+                        temp.put("pages", currSessionObject.getPages().toString());
+                        temp.put("startTime", currSessionObject.getStartTime());
+                        sessionArray.add(temp);
+                        currSessionObject.setAll("0", null, null);
+                        pagesVisited.clear();
+                    }
+                    else {
+                        pagesVisited.add(currVisit.getUrlVisited());
+                        currSessionObject.setDuration( Long.toString( Long.parseLong(currVisit.getTimestamp() ) - Long.parseLong(currSessionObject.getStartTime() ) ) );
                     }
                 }
-                visitsMap.put(id, tempVisitArray);
+                currSessionById.put(entry.getKey(), sessionArray);
             }
-
-            for(String id: visitorIds) {
-                for(ArrayList<VisitObject> currArray: visitsMap.values()){
-                    System.out.println(id + ": " + currArray.toString());
-                }
-            }
-
+            sessionsByUser.put("sessionsByUser", currSessionById);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
-    private static JSONArray buildJsonArrayFromString(String sessionDataJson) throws ParseException {
+    /**
+     *
+     * @param eventDataJson
+     * @return
+     * @throws ParseException
+     */
+    private static JSONArray buildJsonArrayFromString(String eventDataJson) throws ParseException {
         JSONParser parser = new JSONParser();
-        return (JSONArray) ((JSONObject) parser.parse(sessionDataJson)).get("events");
+        return (JSONArray) ((JSONObject) parser.parse(eventDataJson)).get("events");
+    }
+
+    private static HashSet<String> buildVisitorIdSet(JSONArray events) {
+        HashSet<String> idSet = new HashSet<>();
+
+        JSONObject tempObj;
+        for (Object event : events) {
+            tempObj = (JSONObject) event;
+            idSet.add(tempObj.get("visitorId").toString());
+        }
+        return idSet;
+    }
+
+    private static HashMap<String, ArrayList<VisitObject>> buildVisitorIdMap(HashSet<String> visitorIds, JSONArray events) {
+        HashMap<String, ArrayList<VisitObject>> visitsMap = new HashMap<>();
+        JSONObject tempObj;
+        for(String id: visitorIds) {
+            ArrayList<VisitObject> tempVisitArray = new ArrayList<>();
+
+            for(Object event : events) {
+                tempObj = (JSONObject) event;
+
+                if(tempObj.get("visitorId").equals(id)) {
+                    tempVisitArray.add(new VisitObject(
+                                    tempObj.get("url").toString(),
+                                    tempObj.get("timestamp").toString()
+                            )
+                    );
+                }
+            }
+            visitsMap.put(id, tempVisitArray);
+        }
+        return visitsMap;
+    }
+
+    private static void sortVisitObjectArrays(HashMap<String, ArrayList<VisitObject>> visitsMap) {
+        for(ArrayList<VisitObject> currArray: visitsMap.values()){
+            currArray.sort(Comparator.comparing(VisitObject::getTimestamp));
+        }
     }
 }
