@@ -2,9 +2,13 @@ import objects.UserSessionObject;
 import objects.VisitObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,27 +22,28 @@ import java.util.*;
  * another url
  */
 public class SessionProfileService {
-    private static final int TEN_MIN_IN_MILLISECONDS = 60000;
+    private static final int TEN_MIN_IN_MILLISECONDS = 600000;
 
-    public static void buildAndPostProfilesFromUrl(String url) {
+    public static void buildAndPostProfiles(String urlGet, String urlPost) {
         try {
-            String eventDataJson = getJsonAsString(url);
-            String profileDataJson = buildProfilesJson(eventDataJson);
-
+            String eventDataJson = getJsonFromUrlAsString(urlGet);
+            String sessionsByUser = buildProfilesJson(eventDataJson);
+            System.out.println("Response: " + postSessionsJsonToUrl(sessionsByUser, urlPost));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static String getJsonAsString(String url) {
+    private static String getJsonFromUrlAsString(String url) {
         String jsonString = "";
         try {
-            HttpClient client = HttpClientBuilder.create().build();
+            CloseableHttpClient client = HttpClientBuilder.create().build();
             HttpGet getJsonRequest = new HttpGet(url);
             getJsonRequest.addHeader("accept", "application/json");
 
             HttpResponse response = client.execute(getJsonRequest);
             jsonString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            client.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,13 +52,14 @@ public class SessionProfileService {
 
     /**
      * Calls many subsequent methods but is tasked with building "sessionByUser" json
-     * @param eventDataJson
-     * @return
+     * @param eventDataJson - contains all visitor "events" or visits
+     * @return string containing complete sessionsByUser json data
      */
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static String buildProfilesJson(String eventDataJson) {
         HashSet<String> visitorIdsSet;
         HashMap<String, ArrayList<VisitObject>> visitsMap;
+        String sessionsByUserJsonString = "";
 
         try {
             JSONArray events = buildJsonArrayFromString(eventDataJson);
@@ -62,48 +68,13 @@ public class SessionProfileService {
 
             sortVisitObjectArrays(visitsMap);
 
-            JSONArray sessionArray = new JSONArray();
-            JSONObject currSessionById = new JSONObject(), sessionsByUser = new JSONObject();
-            for(Map.Entry<String, ArrayList<VisitObject>> entry: visitsMap.entrySet()) {
-                ArrayList<String> pagesVisited = new ArrayList<>();
-                UserSessionObject currSessionObject = new UserSessionObject("0", null, null);
-                sessionArray.clear();
-
-                for (VisitObject currVisit : entry.getValue()) {
-                    if(currSessionObject.getStartTime() == null) {
-                        currSessionObject.setStartTime(currVisit.getTimestamp());
-                    }
-
-                    if(Long.parseLong(currVisit.getTimestamp()) - Long.parseLong(currSessionObject.getStartTime()) > TEN_MIN_IN_MILLISECONDS) {
-                        currSessionObject.setPages(pagesVisited);
-                        JSONObject temp = new JSONObject();
-                        temp.put("duration", currSessionObject.getDuration());
-                        temp.put("pages", currSessionObject.getPages().toString());
-                        temp.put("startTime", currSessionObject.getStartTime());
-                        sessionArray.add(temp);
-                        currSessionObject.setAll("0", null, null);
-                        pagesVisited.clear();
-                    }
-                    else {
-                        pagesVisited.add(currVisit.getUrlVisited());
-                        currSessionObject.setDuration( Long.toString( Long.parseLong(currVisit.getTimestamp() ) - Long.parseLong(currSessionObject.getStartTime() ) ) );
-                    }
-                }
-                currSessionById.put(entry.getKey(), sessionArray);
-            }
-            sessionsByUser.put("sessionsByUser", currSessionById);
+            sessionsByUserJsonString = getSessionsByUserJsonString(visitsMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return sessionsByUserJsonString;
     }
 
-    /**
-     *
-     * @param eventDataJson
-     * @return
-     * @throws ParseException
-     */
     private static JSONArray buildJsonArrayFromString(String eventDataJson) throws ParseException {
         JSONParser parser = new JSONParser();
         return (JSONArray) ((JSONObject) parser.parse(eventDataJson)).get("events");
@@ -146,5 +117,69 @@ public class SessionProfileService {
         for(ArrayList<VisitObject> currArray: visitsMap.values()){
             currArray.sort(Comparator.comparing(VisitObject::getTimestamp));
         }
+    }
+
+    private static String getSessionsByUserJsonString(HashMap<String, ArrayList<VisitObject>> visitsMap) {
+        JSONArray sessionArray = new JSONArray();
+        JSONObject currSessionById = new JSONObject(), sessionsByUser = new JSONObject();
+
+        for(Map.Entry<String, ArrayList<VisitObject>> entry: visitsMap.entrySet()) {
+            ArrayList<String> pagesVisited = new ArrayList<>();
+            UserSessionObject currSessionObject = new UserSessionObject("0", null, null);
+            sessionArray.clear();
+
+            for (VisitObject currVisit : entry.getValue()) {
+                if(currSessionObject.getStartTime() == null) {
+                    currSessionObject.setStartTime(currVisit.getTimestamp());
+                }
+
+                if(Long.parseLong(currVisit.getTimestamp()) - Long.parseLong(currSessionObject.getStartTime()) > TEN_MIN_IN_MILLISECONDS) {
+                    JSONObject tempObj = new JSONObject();
+                    JSONArray tempArray = new JSONArray();
+
+                    currSessionObject.setPages(pagesVisited);
+                    tempObj.put("duration", currSessionObject.getDuration());
+                    for(String s: pagesVisited) {
+                        tempArray.add(s);
+                    }
+                    tempObj.put("pages", tempArray);
+                    tempObj.put("startTime", currSessionObject.getStartTime());
+                    sessionArray.add(tempObj);
+
+                    pagesVisited.clear();
+                    currSessionObject.setAll("0", null, null);
+                }
+                else {
+                    pagesVisited.add(currVisit.getUrlVisited());
+                    currSessionObject.setDuration( Long.toString( Long.parseLong(currVisit.getTimestamp() ) - Long.parseLong(currSessionObject.getStartTime() ) ) );
+                }
+            }
+            currSessionById.put(entry.getKey(), sessionArray);
+        }
+        sessionsByUser.put("sessionsByUser", currSessionById);
+        return sessionsByUser.toJSONString().replaceAll("\\\\", "");
+    }
+
+    private static String postSessionsJsonToUrl(String sessionsByUser, String urlPost) {
+        String responseString = "";
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(urlPost);
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json; charset=UTF-8");
+
+            StringEntity jsonEntity = new StringEntity(sessionsByUser, StandardCharsets.UTF_8);
+            jsonEntity.setContentType("application/json");
+            httpPost.setEntity(jsonEntity);
+
+            CloseableHttpResponse response = client.execute(httpPost);
+            responseString = response.toString();
+            response.close();
+            client.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return responseString;
     }
 }
